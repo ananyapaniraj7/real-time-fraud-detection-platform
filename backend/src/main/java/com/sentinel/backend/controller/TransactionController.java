@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sentinel.backend.dto.CreateTransactionRequest;
+import com.sentinel.backend.fraud.FraudResult;
 import com.sentinel.backend.service.TransactionService;
 
 import jakarta.validation.Valid;
@@ -25,13 +26,13 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createTransaction(
+    public ResponseEntity<Map<String, Object>> createTransaction(
             @Valid @RequestBody CreateTransactionRequest request
     ) {
-        transactionService.createTransaction(request);
+        FraudResult result = transactionService.createTransaction(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(Map.of("message", "Transaction created successfully"));
+                .body(Map.of("message", "Transaction created successfully","riskScore",result.getRiskScore(),"decision", result.getDecision(),"reason",result.getReason()));
     }
 }

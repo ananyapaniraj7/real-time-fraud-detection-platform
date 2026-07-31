@@ -4,18 +4,23 @@ import org.springframework.stereotype.Service;
 
 import com.sentinel.backend.dto.CreateTransactionRequest;
 import com.sentinel.backend.entity.Transaction;
+import com.sentinel.backend.fraud.FraudDetectionService;
+import com.sentinel.backend.fraud.FraudResult;
 import com.sentinel.backend.repository.TransactionRepository;
 
 @Service
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final FraudDetectionService fraudDetectionService;
 
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository,FraudDetectionService fraudDetectionService) {
         this.transactionRepository = transactionRepository;
+        this.fraudDetectionService=fraudDetectionService;
     }
 
-    public Transaction createTransaction(CreateTransactionRequest request) {
+    
+    public FraudResult createTransaction(CreateTransactionRequest request){
         Transaction transaction = Transaction.builder()
                 .customerId(request.getCustomerId())
                 .merchantId(request.getMerchantId())
@@ -23,6 +28,10 @@ public class TransactionService {
                 .currency(request.getCurrency())
                 .build();
 
-        return transactionRepository.save(transaction);
+        FraudResult result = fraudDetectionService.evaluate(transaction);
+
+        transactionRepository.save(transaction);
+
+        return result;
     }
 }
