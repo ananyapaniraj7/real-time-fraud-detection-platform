@@ -1,7 +1,5 @@
 package com.sentinel.backend.fraud.rules;
 
-import java.math.BigDecimal;
-
 import org.springframework.stereotype.Component;
 
 import com.sentinel.backend.entity.Transaction;
@@ -9,24 +7,24 @@ import com.sentinel.backend.fraud.FraudDecision;
 import com.sentinel.backend.fraud.FraudResult;
 
 @Component
-public class HighAmountRule implements FraudRule {
+public class ForeignCurrencyRule implements FraudRule {
 
-    private static final BigDecimal HIGH_AMOUNT_THRESHOLD = new BigDecimal("100000");
+    private static final String DOMESTIC_CURRENCY = "INR";
 
     @Override
     public FraudResult evaluate(Transaction transaction) {
-        if (transaction.getAmount().compareTo(HIGH_AMOUNT_THRESHOLD) > 0) {
+        if (!DOMESTIC_CURRENCY.equalsIgnoreCase(transaction.getCurrency())) {
             return FraudResult.builder()
-                    .riskScore(80)
+                    .riskScore(25)
                     .decision(FraudDecision.REVIEW)
-                    .reason("High transaction amount")
+                    .reason("Foreign currency transaction")
                     .build();
         }
 
         return FraudResult.builder()
                 .riskScore(0)
                 .decision(FraudDecision.ALLOW)
-                .reason("No high amount risk")
+                .reason("Domestic currency transaction")
                 .build();
     }
 }

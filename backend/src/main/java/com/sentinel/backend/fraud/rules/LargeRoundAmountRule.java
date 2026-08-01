@@ -9,24 +9,24 @@ import com.sentinel.backend.fraud.FraudDecision;
 import com.sentinel.backend.fraud.FraudResult;
 
 @Component
-public class HighAmountRule implements FraudRule {
+public class LargeRoundAmountRule implements FraudRule {
 
-    private static final BigDecimal HIGH_AMOUNT_THRESHOLD = new BigDecimal("100000");
+    private static final BigDecimal ROUND_AMOUNT_DIVISOR = new BigDecimal("10000");
 
     @Override
     public FraudResult evaluate(Transaction transaction) {
-        if (transaction.getAmount().compareTo(HIGH_AMOUNT_THRESHOLD) > 0) {
+        if (transaction.getAmount().remainder(ROUND_AMOUNT_DIVISOR).compareTo(BigDecimal.ZERO) == 0) {
             return FraudResult.builder()
-                    .riskScore(80)
+                    .riskScore(15)
                     .decision(FraudDecision.REVIEW)
-                    .reason("High transaction amount")
+                    .reason("Large round amount")
                     .build();
         }
 
         return FraudResult.builder()
                 .riskScore(0)
                 .decision(FraudDecision.ALLOW)
-                .reason("No high amount risk")
+                .reason("Amount pattern appears normal")
                 .build();
     }
 }

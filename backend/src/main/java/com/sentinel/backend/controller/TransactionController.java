@@ -1,6 +1,5 @@
 package com.sentinel.backend.controller;
 
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sentinel.backend.dto.CreateTransactionRequest;
+import com.sentinel.backend.dto.CreateTransactionResponse;
 import com.sentinel.backend.fraud.FraudResult;
 import com.sentinel.backend.service.TransactionService;
 
@@ -26,13 +26,20 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createTransaction(
+    public ResponseEntity<CreateTransactionResponse> createTransaction(
             @Valid @RequestBody CreateTransactionRequest request
     ) {
         FraudResult result = transactionService.createTransaction(request);
+        CreateTransactionResponse response = CreateTransactionResponse.builder()
+                .message("Transaction created successfully")
+                .riskScore(result.getRiskScore())
+                .decision(result.getDecision())
+                .reason(result.getReason())
+                .build();
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(Map.of("message", "Transaction created successfully","riskScore",result.getRiskScore(),"decision", result.getDecision(),"reason",result.getReason()));
+                .body(response);
+
     }
 }

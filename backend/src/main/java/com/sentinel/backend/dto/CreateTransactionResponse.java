@@ -1,5 +1,6 @@
-package com.sentinel.backend.fraud;
+package com.sentinel.backend.dto;
 
+import com.sentinel.backend.fraud.FraudDecision;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +12,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FraudResult {
 
+public class CreateTransactionResponse {
+    private String message;
     private int riskScore;
     private FraudDecision decision;
     private String reason;
