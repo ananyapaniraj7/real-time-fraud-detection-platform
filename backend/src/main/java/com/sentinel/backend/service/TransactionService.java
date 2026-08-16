@@ -8,6 +8,9 @@ import com.sentinel.backend.fraud.FraudDetectionService;
 import com.sentinel.backend.fraud.FraudResult;
 import com.sentinel.backend.repository.TransactionRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class TransactionService {
 
@@ -18,9 +21,16 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
         this.fraudDetectionService=fraudDetectionService;
     }
-
     
     public FraudResult createTransaction(CreateTransactionRequest request){
+        log.info(
+                "Transaction received: customerId={}, merchantId={}, amount={}, currency={}",
+                request.getCustomerId(),
+                request.getMerchantId(),
+                request.getAmount(),
+                request.getCurrency()
+        );
+
         Transaction transaction = Transaction.builder()
                 .customerId(request.getCustomerId())
                 .merchantId(request.getMerchantId())
@@ -31,6 +41,13 @@ public class TransactionService {
         FraudResult result = fraudDetectionService.evaluate(transaction);
 
         transactionRepository.save(transaction);
+
+        log.info(
+                "Transaction evaluated: transactionId={}, riskScore={}, decision={}",
+                transaction.getId(),
+                result.getRiskScore(),
+                result.getDecision()
+        );
 
         return result;
     }
