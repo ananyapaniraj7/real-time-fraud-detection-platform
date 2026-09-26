@@ -16,6 +16,7 @@ import com.sentinel.backend.fraud.rules.FraudRule;
 import com.sentinel.backend.fraud.rules.HighAmountRule;
 import com.sentinel.backend.fraud.rules.LargeRoundAmountRule;
 import com.sentinel.backend.fraud.rules.MerchantBlackListRule;
+import com.sentinel.backend.fraud.rules.VelocityCheckRule;
 
 class FraudDetectionServiceTest {
 
@@ -105,13 +106,14 @@ class FraudDetectionServiceTest {
     }
 
     private static List<FraudRule> realRules() {
-        return List.of(
-                new HighAmountRule(),
-                new ForeignCurrencyRule(),
-                new LargeRoundAmountRule(),
-                new MerchantBlackListRule()
-        );
-    }
+    return List.of(
+            new HighAmountRule(),
+            new ForeignCurrencyRule(),
+            new LargeRoundAmountRule(),
+            new MerchantBlackListRule(),
+            new VelocityCheckRule()
+    );
+}
 
     private static Transaction transaction(String merchantId, String amount, String currency) {
         return Transaction.builder()

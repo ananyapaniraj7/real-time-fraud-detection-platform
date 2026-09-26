@@ -1,4 +1,5 @@
-package com.sentinel.backend.controller;
+package com.sentinel.backend;
+
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.sentinel.backend.controller.TransactionController;
 import com.sentinel.backend.dto.CreateTransactionRequest;
 import com.sentinel.backend.fraud.FraudDecision;
 import com.sentinel.backend.fraud.FraudResult;
