@@ -8,7 +8,7 @@ Sentinel combines a Spring Boot backend, PostgreSQL database, and React dashboar
 
 ## Dashboard Preview
 
-![Sentinel Dashboard](screenshots/sentinel-dashboard.png)
+![Sentinel Dashboard](architecture/diagrams/screenshots/sentinel-dashboard.png)
 
 ## Features
 
