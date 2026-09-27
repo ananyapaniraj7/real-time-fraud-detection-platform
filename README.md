@@ -5,6 +5,11 @@ A full-stack transaction fraud detection platform that evaluates transactions us
 
 Sentinel combines a Spring Boot backend, PostgreSQL database, and React dashboard to provide transaction evaluation, persistence, and monitoring.
 
+
+## Dashboard Preview
+
+![Sentinel Dashboard](screenshots/sentinel-dashboard.png)
+
 ## Features
 
 - **Rule-Based Fraud Detection:** Evaluates transactions using five risk assessment rules.
