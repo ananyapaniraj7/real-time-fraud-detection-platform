@@ -4,8 +4,12 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.sentinel.backend.fraud.FraudDecision;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -42,6 +46,16 @@ public class Transaction {
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
+
+    @Column(nullable = false)
+    private Integer riskScore;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private FraudDecision decision;
+
+    @Column(length = 1000)
+    private String reason;
 
     @PrePersist
     private void prePersist() {

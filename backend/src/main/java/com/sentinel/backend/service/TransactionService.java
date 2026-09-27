@@ -1,5 +1,7 @@
 package com.sentinel.backend.service;
 
+import java.util.List;
+import com.sentinel.backend.dto.TransactionHistoryResponse;
 import org.springframework.stereotype.Service;
 
 import com.sentinel.backend.dto.CreateTransactionRequest;
@@ -37,8 +39,11 @@ public class TransactionService {
                 .amount(request.getAmount())
                 .currency(request.getCurrency())
                 .build();
-
+        
         FraudResult result = fraudDetectionService.evaluate(transaction);
+        transaction.setRiskScore(result.getRiskScore());
+        transaction.setDecision(result.getDecision());
+        transaction.setReason(result.getReason());
 
         transactionRepository.save(transaction);
 
@@ -51,4 +56,23 @@ public class TransactionService {
 
         return result;
     }
+    public List<TransactionHistoryResponse> getRecentTransactions() {
+
+        return transactionRepository
+                .findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(transaction -> new TransactionHistoryResponse(
+                        transaction.getId(),
+                        transaction.getCustomerId(),
+                        transaction.getMerchantId(),
+                        transaction.getAmount(),
+                        transaction.getCurrency(),
+                        transaction.getRiskScore(),
+                        transaction.getDecision(),
+                        transaction.getReason(),
+                        transaction.getCreatedAt()
+                ))
+                .toList();
+    }
+
 }
